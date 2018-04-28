@@ -10,11 +10,15 @@ import hello.Source;
 import hello.myUUID;
 
 public class UUIDDAO extends BaseDAO{
-	
-	public int insert(myUUID UUID) {
-		PreparedStatement ps = null;
 
-		String sql = "INSERT INTO UUID VALUES(?,?,?,?,?)";
+	public ArrayList<myUUID> getAll() {
+		ArrayList<myUUID> result = new ArrayList<myUUID>();
+		
+		PreparedStatement ps = null;
+		
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM UUID";
 		
 		try {
 
@@ -23,13 +27,17 @@ public class UUIDDAO extends BaseDAO{
 			}
 			ps = getConnection().prepareStatement(sql);
 
-			ps.setString(1, UUID.getUUID_ID());
-			ps.setString(2, UUID.getSource_EntityID());
-			ps.setInt(3, UUID.getEntityTypeID());
-			ps.setInt(4, UUID.getEntityVersion());
-			ps.setInt(5, UUID.getSource_ID());
-
-			return ps.executeUpdate();
+			rs = ps.executeQuery();
+			
+			while(rs.next()) { 
+				String ID = rs.getString("UUID"); 
+				String source_entityID = rs.getString("Source_EntityID"); 
+				int entityTypeID = rs.getInt("EntityTypeID"); 
+				int entityVersionID = rs.getInt("EntityVersion"); 
+				int source_ID = rs.getInt("SourceID"); 
+				myUUID uuid= new myUUID(ID,source_entityID,entityTypeID,entityVersionID,source_ID);
+				result.add(uuid);
+			}
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -43,13 +51,14 @@ public class UUIDDAO extends BaseDAO{
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 				;
-				throw new RuntimeException("error.unexpected");
+				throw new RuntimeException("erro unexpected");
 			}
 		}
+		return result;
 	}
 	
-	
-	public ArrayList<String> getAll() {
+	// OK
+	public ArrayList<String> getAllUUIDs() {
 		ArrayList<String> result = new ArrayList<String>();
 		
 		PreparedStatement ps = null;
@@ -91,14 +100,11 @@ public class UUIDDAO extends BaseDAO{
 		return result;
 	}
 	
-	public ArrayList<myUUID> getByUUIDAndSourceName(String UUID, String sourceName) {
-		ArrayList<myUUID> result = new ArrayList<myUUID>();
-		
+	// OK
+	public int insert(myUUID UUID) {
 		PreparedStatement ps = null;
-		
-		ResultSet rs = null;
 
-		String sql = "SELECT * FROM UUID WHERE UUID='?'";
+		String sql = "INSERT INTO UUID VALUES(?,?,?,?,?)";
 		
 		try {
 
@@ -106,6 +112,50 @@ public class UUIDDAO extends BaseDAO{
 				throw new IllegalStateException("error unexpected");
 			}
 			ps = getConnection().prepareStatement(sql);
+
+			ps.setString(1, UUID.getUUID_ID());
+			ps.setString(2, UUID.getSource_EntityID());
+			ps.setInt(3, UUID.getEntityTypeID());
+			ps.setInt(4, UUID.getEntityVersion());
+			ps.setInt(5, UUID.getSource_ID());
+
+			return ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			;
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				;
+				throw new RuntimeException("error.unexpected");
+			}
+		}
+	}
+	
+	// OK
+	public ArrayList<myUUID> getByUUID(String UUID) {
+		ArrayList<myUUID> result = new ArrayList<myUUID>();
+		
+		PreparedStatement ps = null;
+		
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM UUID WHERE UUID=?";
+		
+		try {
+
+			if (getConnection().isClosed()) {
+				throw new IllegalStateException("error unexpected");
+			}
+			ps = getConnection().prepareStatement(sql);
+			
+			ps.setString(1, UUID);
 
 			rs = ps.executeQuery();
 			
@@ -121,7 +171,6 @@ public class UUIDDAO extends BaseDAO{
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-			;
 			throw new RuntimeException(e.getMessage());
 		} finally {
 			try {
@@ -137,7 +186,68 @@ public class UUIDDAO extends BaseDAO{
 		
 		return result;
 	}
+
+	// OK
+	public ArrayList<myUUID> getByUUIDandSourceName(String UUID, String sourceName) {
+		ArrayList<myUUID> result = new ArrayList<myUUID>();
+		
+		PreparedStatement ps = null;
+		
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM UUID WHERE UUID=? AND SourceID=?";
+		
+		ArrayList<myUUID> Uuid = this.getByUUID(UUID);
+		ArrayList<Source> source = this.getSourceByName(sourceName);
+		
+		if(Uuid.isEmpty()) {
+			System.out.println("UUID not known");
+			return null;
+		}
+		if(source.isEmpty()) {
+			System.out.println("Source not known");
+			return null;
+		}
+		try {
+
+			if (getConnection().isClosed()) {
+				throw new IllegalStateException("error unexpected");
+			}
+			ps = getConnection().prepareStatement(sql);
+			
+			ps.setString(1, UUID);
+			ps.setInt(2, source.get(0).getId());
+
+			rs = ps.executeQuery();
+			
+			while(rs.next()) { 
+				String ID = rs.getString("UUID"); 
+				String source_entityID = rs.getString("Source_EntityID"); 
+				int entityTypeID = rs.getInt("EntityTypeID"); 
+				int entityVersionID = rs.getInt("EntityVersion"); 
+				int source_ID = rs.getInt("SourceID"); 
+				myUUID uuid= new myUUID(ID,source_entityID,entityTypeID,entityVersionID,source_ID);
+				result.add(uuid);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				throw new RuntimeException("error unexpected");
+			}
+		}
+		
+		return result;
+	}
 	
+	// OK
 	public ArrayList<Entity> getEntityByName(String entityName) {
 		
 		ArrayList<Entity> result = new ArrayList<Entity>();
@@ -177,13 +287,13 @@ public class UUIDDAO extends BaseDAO{
 
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
-				;
 				throw new RuntimeException("error unexpected");
 			}
 		}
 		return result;
 	}
 	
+	// OK
 	public ArrayList<Source> getSourceByName(String sourceName) {
 		
 		ArrayList<Source> result = new ArrayList<Source>();
@@ -230,6 +340,7 @@ public class UUIDDAO extends BaseDAO{
 		return result;
 	}
 	
+	// OK
 	public void updateVersion(myUUID UUID) {
 		
 		PreparedStatement ps = null;
@@ -266,8 +377,5 @@ public class UUIDDAO extends BaseDAO{
 				throw new RuntimeException("erro unexpected");
 			}
 		}
-		
-		
 	}
-	
 }

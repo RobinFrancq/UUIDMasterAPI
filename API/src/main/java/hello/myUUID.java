@@ -62,24 +62,24 @@ public class myUUID {
 	// Function that generates a UUID
 	public static String generateUUID() {
 		
-		//UUIDDAO dao = new UUIDDAO();
+		UUIDDAO dao = new UUIDDAO();
 		
-		//ArrayList<String> UUIDs = dao.getAll();
+		ArrayList<String> UUIDs = dao.getAllUUIDs();
 		
 		String newUUID = UUID.randomUUID().toString();
 		
 		// Check if UUID exists allready
-		//for(int i=0; i<UUIDs.size(); i++) {
-		//	if(UUIDs.get(i) == newUUID) {
-		//		generateUUID();
-		//	}
-		//}
+		for(int i=0; i<UUIDs.size(); i++) {
+			if(UUIDs.get(i) == newUUID) {
+				generateUUID();
+			}
+		}
 		return newUUID;
 	}
     
 
 
-	// TWO FUNCTIONS THAT WILL BE USED BY OTHER SYSTEMS
+	// THREE FUNCTIONS THAT WILL BE USED BY OTHER SYSTEMS
 	
 	// Function that creates new UUID row into the database
 	// Parameters of this function came from message
@@ -91,15 +91,25 @@ public class myUUID {
 			ArrayList<Entity> entity = dao.getEntityByName(entityName);
 			ArrayList<Source> source = dao.getSourceByName(sourceName);
 			
-			myUUID UUID = new myUUID(newUUID, sourceEntityId, entity.get(0).getId(), 1, source.get(0).getId());
-			dao.insert(UUID);
-			System.out.println("Folowing row has been inserted to the database: ");
-			System.out.println("UUID: " + newUUID);
-			System.out.println("Source_EntityID: " + sourceEntityId);
-			System.out.println("Entity: " + entity.get(0).getName());
-			System.out.println("Entity_Version: 1");
-			System.out.println("Source: " + source.get(0).getName());
-			return UUID;
+			if(entity.isEmpty()) {
+				System.out.println("Entity not known");
+				return null;
+			}
+			if(source.isEmpty()) {
+				System.out.println("Source not known");
+				return null;
+			}
+			else {
+				myUUID UUID = new myUUID(newUUID, sourceEntityId, entity.get(0).getId(), 1, source.get(0).getId());
+				dao.insert(UUID);
+				System.out.println("Folowing row has been inserted to the database: ");
+				System.out.println("UUID: " + newUUID);
+				System.out.println("Source_EntityID: " + sourceEntityId);
+				System.out.println("Entity: " + entity.get(0).getName());
+				System.out.println("Entity_Version: 1");
+				System.out.println("Source: " + source.get(0).getName());
+				return UUID;
+			}
 		}
 		catch (Exception e) {
 			System.out.println("Something went wrong");
@@ -116,16 +126,29 @@ public class myUUID {
 			ArrayList<Entity> entity = dao.getEntityByName(entityName);
 			ArrayList<Source> source = dao.getSourceByName(sourceName);
 			
-			myUUID UUID = new myUUID(UUIDToinsert, sourceEntityId, entity.get(0).getId(), 1, source.get(0).getId());
-			
-			dao.insert(UUID);
-			System.out.println("Folowing row has been inserted to the database: ");
-			System.out.println("UUID: " + UUIDToinsert);
-			System.out.println("Source_EntityID: " + sourceEntityId);
-			System.out.println("Entity: " + entityName);
-			System.out.println("Entity_Version: 1");
-			System.out.println("Source: " + sourceName);
-			return UUID;
+			if(dao.getByUUID(UUIDToinsert).isEmpty()) {
+				System.out.println("UUID not known");
+				return null;
+			}
+			if(entity.isEmpty()) {
+				System.out.println("Entity not known");
+				return null;
+			}
+			if(source.isEmpty()) {
+				System.out.println("Source not known");
+				return null;
+			}
+			else {
+				myUUID UUID = new myUUID(UUIDToinsert, sourceEntityId, entity.get(0).getId(), 1, source.get(0).getId());
+				dao.insert(UUID);
+				System.out.println("Folowing row has been inserted to the database: ");
+				System.out.println("UUID: " + UUIDToinsert);
+				System.out.println("Source_EntityID: " + sourceEntityId);
+				System.out.println("Entity: " + entityName);
+				System.out.println("Entity_Version: 1");
+				System.out.println("Source: " + sourceName);
+				return UUID;
+			}
 		}
 		catch(Exception e) {
 			System.out.println("Something went wrong");
@@ -135,15 +158,18 @@ public class myUUID {
 	
 	// Function that updates the EntityVersion in the database
 	// the parameter is form the message
-	public static void updateVersion(String findUUID, String sourceEntityID, String entityName, String sourceName) {
+	public static void updateVersion(String findUUID, String sourceName) {
 		UUIDDAO dao = new UUIDDAO();
 		
-		ArrayList<Entity> entity = dao.getEntityByName(entityName);
-		ArrayList<Source> source = dao.getSourceByName(sourceName);
+		ArrayList<myUUID> result = dao.getByUUIDandSourceName(findUUID, sourceName);
 		
-		myUUID UUID = new myUUID(findUUID, sourceEntityID, entity.get(0).getId(), 0, source.get(0).getId());
-		dao.updateVersion(UUID);
-		System.out.println("UUID version updated");
+		if(result.isEmpty()) {
+			System.out.println("Row not found");
+		}
+		else {
+			myUUID UUID = result.get(0);
+			dao.updateVersion(UUID);
+			System.out.println("UUID version updated");
+		}
 	}
- 
 }
