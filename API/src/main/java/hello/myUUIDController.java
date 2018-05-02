@@ -13,14 +13,12 @@ public class myUUIDController {
 
     // OK
     @RequestMapping(value = "/home")
-    public String create () {
-        String result = "\n";
-        result = result + "Welcome to UUIDMaster\n\n";
-        result = result + "UUID Database\n\n";
-
+    public ArrayList<myUUID> create () {
+        
         UUIDDAO dao = new UUIDDAO();
         ArrayList<myUUID> database = dao.getAll();
 
+    /*
         for(int i=0; i<database.size(); i++){
         	String uuid = database.get(i).getUUID_ID();
         	String sourceEntityId = database.get(i).getSource_EntityID();
@@ -34,8 +32,9 @@ public class myUUIDController {
         	result = result + entityVersion + "\t\t";
         	result = result + sourceId + "\n";
         }
-        System.out.println(result);
-        return "Welcome to UUIDMaster";
+        */
+        
+        return database;
     }
 
     // OK
