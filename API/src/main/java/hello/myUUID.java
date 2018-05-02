@@ -102,7 +102,7 @@ public class myUUID {
 			else {
 				myUUID UUID = new myUUID(newUUID, sourceEntityId, entity.get(0).getId(), 1, source.get(0).getId());
 				dao.insert(UUID);
-				System.out.println("Folowing row has been inserted to the database: ");
+				System.out.println("Folowing row has been created into the database: ");
 				System.out.println("UUID: " + newUUID);
 				System.out.println("Source_EntityID: " + sourceEntityId);
 				System.out.println("Entity: " + entity.get(0).getName());
@@ -158,18 +158,22 @@ public class myUUID {
 	
 	// Function that updates the EntityVersion in the database
 	// the parameter is form the message
-	public static void updateVersion(String findUUID, String sourceName) {
+	public static myUUID updateVersion(String findUUID, String sourceName) {
 		UUIDDAO dao = new UUIDDAO();
 		
 		ArrayList<myUUID> result = dao.getByUUIDandSourceName(findUUID, sourceName);
 		
 		if(result.isEmpty()) {
 			System.out.println("Row not found");
+			return null;
 		}
 		else {
 			myUUID UUID = result.get(0);
 			dao.updateVersion(UUID);
-			System.out.println("UUID version updated");
+			System.out.println("Folowing row has been updated in the database: ");
+			System.out.println("UUID: " + findUUID);
+			System.out.println("SourceName: " + sourceName);
+			return UUID;
 		}
 	}
 }

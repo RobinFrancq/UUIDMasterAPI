@@ -339,6 +339,98 @@ public class UUIDDAO extends BaseDAO{
 		}
 		return result;
 	}
+
+	// OK
+	public ArrayList<Entity> getEntityById(int entityId) {
+		
+		ArrayList<Entity> result = new ArrayList<Entity>();
+		
+		PreparedStatement ps = null;
+		
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM EntityType WHERE id=?";
+		
+		try {
+
+			if (getConnection().isClosed()) {
+				throw new IllegalStateException("error unexpected");
+			}
+			ps = getConnection().prepareStatement(sql);
+			
+			ps.setInt(1, entityId);
+
+			rs = ps.executeQuery();
+			
+			while(rs.next()) { 
+				int ID = rs.getInt("id"); 
+				String name = rs.getString("name"); 
+				
+				Entity entity = new Entity(ID, name);
+				result.add(entity);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				throw new RuntimeException("error unexpected");
+			}
+		}
+		return result;
+	}
+	
+	// OK
+	public ArrayList<Entity> getSourceById(int sourceId) {
+		
+		ArrayList<Entity> result = new ArrayList<Entity>();
+		
+		PreparedStatement ps = null;
+		
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM Source WHERE id=?";
+		
+		try {
+
+			if (getConnection().isClosed()) {
+				throw new IllegalStateException("error unexpected");
+			}
+			ps = getConnection().prepareStatement(sql);
+			
+			ps.setInt(1, sourceId);
+
+			rs = ps.executeQuery();
+			
+			while(rs.next()) { 
+				int ID = rs.getInt("id"); 
+				String name = rs.getString("Name"); 
+				
+				Entity entity = new Entity(ID, name);
+				result.add(entity);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				throw new RuntimeException("error unexpected");
+			}
+		}
+		return result;
+	}
 	
 	// OK
 	public void updateVersion(myUUID UUID) {

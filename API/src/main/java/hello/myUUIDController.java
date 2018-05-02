@@ -51,8 +51,8 @@ public class myUUIDController {
 
     // OK
     @RequestMapping(value = "/updateUUID")
-    public void create (@RequestParam(value="uuid", defaultValue="none") String uuid, @RequestParam(value="sn", defaultValue="none") String sn) {
-        myUUID.updateVersion(uuid, sn);
+    public myUUID create (@RequestParam(value="uuid", defaultValue="none") String uuid, @RequestParam(value="sn", defaultValue="none") String sn) {
+        return myUUID.updateVersion(uuid, sn);
     }
     
 }
