@@ -160,6 +160,9 @@ public class myUUID {
 			System.out.println("Folowing row has been updated in the database: ");
 			System.out.println("UUID: " + findUUID);
 			System.out.println("SourceName: " + sourceName);
+			
+			result = dao.getByUUIDandSourceName(findUUID, sourceName);
+			UUID = result.get(0);
 			return UUID;
 		}
 	}
