@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import hello.Entity;
-import hello.Source;
-import hello.myUUID;
+import logic.Entity;
+import logic.Source;
+import logic.myUUID;
 
 public class UUIDDAO extends BaseDAO{
 
@@ -39,19 +39,18 @@ public class UUIDDAO extends BaseDAO{
 				result.add(uuid);
 			}
 			
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
 			System.out.println(e.getMessage());
-			;
 			throw new RuntimeException(e.getMessage());
-		} finally {
+		} 
+		finally {
 			try {
 				if (ps != null)
 					ps.close();
-
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
-				;
-				throw new RuntimeException("erro unexpected");
+				throw new RuntimeException("error unexpected");
 			}
 		}
 		return result;
@@ -83,7 +82,6 @@ public class UUIDDAO extends BaseDAO{
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-			;
 			throw new RuntimeException(e.getMessage());
 		} finally {
 			try {
@@ -92,11 +90,9 @@ public class UUIDDAO extends BaseDAO{
 
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
-				;
-				throw new RuntimeException("erro unexpected");
+				throw new RuntimeException("error unexpected");
 			}
 		}
-		
 		return result;
 	}
 	
@@ -123,7 +119,6 @@ public class UUIDDAO extends BaseDAO{
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-			;
 			throw new RuntimeException(e.getMessage());
 		} finally {
 			try {
@@ -132,7 +127,6 @@ public class UUIDDAO extends BaseDAO{
 
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
-				;
 				throw new RuntimeException("error.unexpected");
 			}
 		}
@@ -179,11 +173,9 @@ public class UUIDDAO extends BaseDAO{
 
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
-				;
-				throw new RuntimeException("erro unexpected");
+				throw new RuntimeException("error unexpected");
 			}
 		}
-		
 		return result;
 	}
 
@@ -243,7 +235,6 @@ public class UUIDDAO extends BaseDAO{
 				throw new RuntimeException("error unexpected");
 			}
 		}
-		
 		return result;
 	}
 	
@@ -333,7 +324,6 @@ public class UUIDDAO extends BaseDAO{
 
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
-				;
 				throw new RuntimeException("error unexpected");
 			}
 		}
@@ -465,8 +455,7 @@ public class UUIDDAO extends BaseDAO{
 
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
-				;
-				throw new RuntimeException("erro unexpected");
+				throw new RuntimeException("error unexpected");
 			}
 		}
 	}
