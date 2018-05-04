@@ -26,6 +26,22 @@ public class myUUIDController {
     }
 
     // OK
+    @RequestMapping(value = "/find/{seid}", method=RequestMethod.GET)
+    public ArrayList<myUUID> test(@PathVariable String seid){
+        UUIDDAO dao = new UUIDDAO();
+        ArrayList<myUUID> result = dao.getRowBySourceEntityId(seid);
+
+        if(result.isEmpty()){
+            myUUID notFound = new myUUID("Not Found", "Not Found", 0, 0, 0);
+            result.add(notFound);
+            return result;
+        }
+        else{
+            return result;
+        }
+    }
+
+    // OK
     @RequestMapping(value = "/createUUID/{seid}/{en}/{sn}", method=RequestMethod.GET)
     public myUUID test(@PathVariable String seid, @PathVariable String en, @PathVariable String sn){
         return myUUID.createNewUUID(seid, en, sn);

@@ -459,4 +459,97 @@ public class UUIDDAO extends BaseDAO{
 			}
 		}
 	}
+
+	// OK
+	public Boolean checkIfRowExist(String sourceEntityId, int entityTypeId, int sourceId){
+		
+		PreparedStatement ps = null;
+
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM UUID WHERE Source_EntityID=? AND EntityTypeID=? AND SourceID=?";
+
+		try {
+
+			if (getConnection().isClosed()) {
+				throw new IllegalStateException("error unexpected");
+			}
+			ps = getConnection().prepareStatement(sql);
+			
+			ps.setString(1, sourceEntityId);
+			ps.setInt(2, entityTypeId);
+			ps.setInt(3, sourceId);
+
+			rs = ps.executeQuery();
+			
+			if(rs.next()) { 
+				return true;
+			}
+			else {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e.getMessage());
+
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				throw new RuntimeException("error unexpected");
+			}
+		}
+	}
+
+	// OK
+	public ArrayList<myUUID> getRowBySourceEntityId(String SourceEntityId){
+		
+		ArrayList<myUUID> result = new ArrayList<myUUID>();
+
+		PreparedStatement ps = null;
+
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM UUID WHERE Source_EntityID=?";
+
+		try {
+
+			if (getConnection().isClosed()) {
+				throw new IllegalStateException("error unexpected");
+			}
+			ps = getConnection().prepareStatement(sql);
+			
+			ps.setString(1, SourceEntityId);
+
+			rs = ps.executeQuery();
+			
+			while(rs.next()) { 
+				String ID = rs.getString("UUID"); 
+				String source_entityID = rs.getString("Source_EntityID"); 
+				int entityTypeID = rs.getInt("EntityTypeID"); 
+				int entityVersionID = rs.getInt("EntityVersion"); 
+				int source_ID = rs.getInt("SourceID"); 
+				myUUID uuid= new myUUID(ID,source_entityID,entityTypeID,entityVersionID,source_ID);
+				result.add(uuid);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				throw new RuntimeException("error unexpected");
+			}
+		}
+		return result;
+	}
 }

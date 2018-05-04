@@ -66,7 +66,7 @@ public class myUUID {
 		return newUUID;
 	}
     
-	// THREE FUNCTIONS THAT WILL BE USED BY OTHER SYSTEMS
+	// FOR FUNCTIONS THAT WILL BE USED BY OTHER SYSTEMS
 	
 	// Function that creates new UUID row into the database
 	// Parameters of this function came from message
@@ -80,11 +80,18 @@ public class myUUID {
 			
 			if(entity.isEmpty()) {
 				System.out.println("Entity not known");
-				return null;
+				myUUID EntityNotKnown = new myUUID("Entity Not Found", "Entity Not Found", 0, 0, 0);
+				return EntityNotKnown;
 			}
 			if(source.isEmpty()) {
 				System.out.println("Source not known");
-				return null;
+				myUUID SourceNotKnown = new myUUID("Source Not Found", "Source Not Found", 0, 0, 0);
+				return SourceNotKnown;
+			}
+			if(dao.checkIfRowExist(sourceEntityId, entity.get(0).getId(), source.get(0).getId()) == true){
+				System.out.println("UUID allready exist for this Entity");
+				myUUID UUIDExist = new myUUID("UUID allready exist for this Entity", "UUID allready exist for this Entity", 0, 0, 0);
+				return UUIDExist;
 			}
 			else {
 				myUUID UUID = new myUUID(newUUID, sourceEntityId, entity.get(0).getId(), 1, source.get(0).getId());
@@ -115,15 +122,18 @@ public class myUUID {
 			
 			if(dao.getByUUID(UUIDToinsert).isEmpty()) {
 				System.out.println("UUID not known");
-				return null;
+				myUUID UUIDNotKnown = new myUUID("UUID Not Found", "UUID Not Found", 0, 0, 0);
+				return UUIDNotKnown;
 			}
 			if(entity.isEmpty()) {
 				System.out.println("Entity not known");
-				return null;
+				myUUID EntityNotKnown = new myUUID("Entity Not Found", "Entity Not Found", 0, 0, 0);
+				return EntityNotKnown;
 			}
 			if(source.isEmpty()) {
 				System.out.println("Source not known");
-				return null;
+				myUUID SourceNotKnown = new myUUID("Source Not Found", "Source Not Found", 0, 0, 0);
+				return SourceNotKnown;
 			}
 			else {
 				myUUID UUID = new myUUID(UUIDToinsert, sourceEntityId, entity.get(0).getId(), 1, source.get(0).getId());
