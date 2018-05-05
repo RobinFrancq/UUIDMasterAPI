@@ -23,6 +23,7 @@ public class myUUIDController {
         welcome.add("create new UUID example: http://10.3.50.48:9000/createUUID/Source_EntityId/EntityName/SourceName");
         welcome.add("Add existing UUID example: http://10.3.50.48:9000/insertUUID/UUID/Source_EntityId/EntityName/SourceName");
         welcome.add("Update existing UUID example: http://10.3.50.48:9000/updateUUID/UUID/SourceName");
+        welcome.add("MORE INFO FOR TROUBLESHOOTING: https://drive.google.com/open?id=1sTh-Edy-k1_anXpmXNSnhV8WftAyOiJL");
         return welcome;
     }
 
