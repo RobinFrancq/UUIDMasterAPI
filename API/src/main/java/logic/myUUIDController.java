@@ -19,6 +19,7 @@ public class myUUIDController {
         ArrayList<String> welcome = new ArrayList<String>();
         welcome.add("Welcome to UUIDMaster");
         welcome.add("USE: ");
+        welcome.add("Find UUID example: http://10.3.50.48:9000/find/Source_EntityId");
         welcome.add("create new UUID example: http://10.3.50.48:9000/createUUID/Source_EntityId/EntityName/SourceName");
         welcome.add("Add existing UUID example: http://10.3.50.48:9000/insertUUID/UUID/Source_EntityId/EntityName/SourceName");
         welcome.add("Update existing UUID example: http://10.3.50.48:9000/updateUUID/UUID/SourceName");

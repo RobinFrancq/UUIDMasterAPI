@@ -237,6 +237,49 @@ public class UUIDDAO extends BaseDAO{
 		}
 		return result;
 	}
+
+	public Boolean checkByUUIDAndEntityId(String uuid, int entityTypeId){
+		
+		PreparedStatement ps = null;
+
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM UUID WHERE UUID=? AND EntityTypeID=?";
+
+		try {
+
+			if (getConnection().isClosed()) {
+				throw new IllegalStateException("error unexpected");
+			}
+			ps = getConnection().prepareStatement(sql);
+			
+			ps.setString(1, uuid);
+			ps.setInt(2, entityTypeId);
+
+			rs = ps.executeQuery();
+			
+			if(rs.next()) { 
+				return true;
+			}
+			else {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e.getMessage());
+
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				throw new RuntimeException("error unexpected");
+			}
+		}
+	}
 	
 	// OK
 	public ArrayList<Entity> getEntityByName(String entityName) {
@@ -551,5 +594,48 @@ public class UUIDDAO extends BaseDAO{
 			}
 		}
 		return result;
+	}
+
+	public Boolean checkIfRowExistByUUIDAndSourceID(String uuid, int sourceId){
+		
+		PreparedStatement ps = null;
+
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM UUID WHERE UUID=? AND SourceID=?";
+
+		try {
+
+			if (getConnection().isClosed()) {
+				throw new IllegalStateException("error unexpected");
+			}
+			ps = getConnection().prepareStatement(sql);
+			
+			ps.setString(1, uuid);
+			ps.setInt(2, sourceId);
+
+			rs = ps.executeQuery();
+			
+			if(rs.next()) { 
+				return true;
+			}
+			else {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e.getMessage());
+
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				throw new RuntimeException("error unexpected");
+			}
+		}
 	}
 }

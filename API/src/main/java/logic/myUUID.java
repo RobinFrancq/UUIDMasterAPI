@@ -135,6 +135,16 @@ public class myUUID {
 				myUUID SourceNotKnown = new myUUID("Source Not Found", "Source Not Found", 0, 0, 0);
 				return SourceNotKnown;
 			}
+			if(dao.checkIfRowExistByUUIDAndSourceID(UUIDToinsert, source.get(0).getId()) == true){
+				System.out.println("UUID allready exist for this Source");
+				myUUID UUIDExist = new myUUID("UUID allready exist for this Source", "UUID allready exist for this Source", 0, 0, 0);
+				return UUIDExist;
+			}
+			if(dao.checkByUUIDAndEntityId(UUIDToinsert, entity.get(0).getId()) == false){
+				System.out.println("UUID not existing for this Entity");
+				myUUID UUIDnotEntity = new myUUID("UUID not existing for this Entity", "UUID not existing for this Entity", 0, 0, 0);
+				return UUIDnotEntity;
+			}
 			else {
 				myUUID UUID = new myUUID(UUIDToinsert, sourceEntityId, entity.get(0).getId(), 1, source.get(0).getId());
 				dao.insert(UUID);
@@ -162,7 +172,8 @@ public class myUUID {
 		
 		if(result.isEmpty()) {
 			System.out.println("Row not found");
-			return null;
+			myUUID RowNotFound = new myUUID("Row not Found", "Row not Found", 0, 0, 0);
+			return RowNotFound;
 		}
 		else {
 			myUUID UUID = result.get(0);
